@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # companyQuery2.0
 A new tool ( new version ) to find companyQuery whick you want to know in Gaode map
 1.利用vue cli、vuex对项目进行了重新架构
@@ -7,3 +8,26 @@ A new tool ( new version ) to find companyQuery whick you want to know in Gaode 
 3.页面组件化构建，性能得到提升
 
 4.更多的功能例如地图展示招聘信息，企业大事时间轴展示等等，正在不断完善中
+=======
+# companyquery2.0
+
+> companyquery2.0
+
+## Build Setup
+
+``` bash
+# install dependencies
+npm install
+
+# serve with hot reload at localhost:8080
+npm run dev
+
+# build for production with minification
+npm run build
+
+# build for production and view the bundle analyzer report
+npm run build --report
+```
+
+For a detailed explanation on how things work, check out the [guide](http://vuejs-templates.github.io/webpack/) and [docs for vue-loader](http://vuejs.github.io/vue-loader).
+>>>>>>> init companyQuery2.0 github
