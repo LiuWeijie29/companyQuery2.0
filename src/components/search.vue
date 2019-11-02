@@ -2,7 +2,7 @@
 	<div class="container">
 		<Row type="flex" justify="space-between" class="code-row-bg">
 			<Col span="16">
-			<Input v-model="userIpt" placeholder="请输入您要查询的企业关键信息" size="large" autofocus @keyup.enter.native="searchCompany"></Input>
+			<Input v-model="userIpt" value="南昌" placeholder="请输入您要查询的企业关键信息" size="large" autofocus @keyup.enter.native="searchCompany"></Input>
 			</Col>
 			<Col span="8">
 			<Button id="searchBtn"  @click="searchCompany" size="large" icon="ios-search" type="primary" :loading="sBtnLoading">搜索</Button>

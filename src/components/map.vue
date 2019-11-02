@@ -33,6 +33,122 @@
         </ul>
       </div>
     </Col>
+
+    <!--  点击Marker后出现的对话框  -->
+    <Modal
+        class = "markerDialog"
+        v-model="searchThisCompanyDialog"
+        :title="currentCompany ? currentCompany.name : '公司信息'"
+        :width="800"
+        @on-ok=""
+        @on-cancel="">
+        <div class="spiltBox">
+          <div class="spilt-left">
+            <p><Tag color="blue" class="split-left-tag">企业法人</Tag>{{currentCompany.legalPerson}}</p>
+            <p><Tag color="blue" class="split-left-tag">联系电话</Tag>{{currentCompany.phone ? currentCompany.phone : currentCompany.morePhone}}</p>
+            <p><Tag color="blue" class="split-left-tag">成立日期</Tag>{{currentCompany.date ? currentCompany.date : '暂无信息'}}</p>
+            <p><Tag color="blue" class="split-left-tag">社会统一信用代码</Tag>{{currentCompany.creditCode ? currentCompany.creditCode: '暂无信息'}}</p>
+            <p><Tag color="blue" class="split-left-tag">注册资本</Tag>{{currentCompany.capital ? currentCompany.capital: '暂无信息'}}</p>
+            <p><Tag color="blue" class="split-left-tag">地址</Tag>{{currentCompany.address ? currentCompany.address : '暂无信息'}}</p>
+            <p><Tag color="blue" class="split-left-tag">经营范围</Tag>{{currentCompany.scope ? currentCompany.scope: '暂无信息'}}</p>
+          </div>
+          <div class="spilt-right" >
+            <Card  class="altas-item" @click.native="showSubDialog('legalPerson')">
+              <Icon class="altas-item-icon" color="rgb(24,144,255)" type="ios-contact" title="企业法人信息" size="36"/>
+            </Card>
+            <Card  class="altas-item" @click.native="showSubDialog('otherCompany')">
+              <Icon class="altas-item-icon" color="rgb(24,144,255)" type="md-analytics" title="法人名下其他公司" size="36"/>
+            </Card>
+            <Card  class="altas-item" @click.native="showSubDialog('ERP')">
+              <Icon class="altas-item-icon" color="rgb(24,144,255)" type="md-git-branch" title="企业经营组织架构" size="36"/>
+            </Card>
+            <Card  class="altas-item" @click.native="showSubDialog('staff')">
+              <Icon class="altas-item-icon" color="rgb(24,144,255)" type="ios-people" title="企业人员组织架构" size="36"/>
+            </Card>
+            <Card  class="altas-item" @click.native="showSubDialog('staffFlow')">
+              <Icon class="altas-item-icon" color="rgb(24,144,255)" type="ios-walk" title="企业人员流动情况" size="36"/>
+            </Card>
+            <Card  class="altas-item" @click.native="showSubDialog('market')">
+              <Icon class="altas-item-icon" color="rgb(24,144,255)" type="md-pulse" title="企业市值评估" size="36"/>
+            </Card>
+            <Card  class="altas-item" @click.native="showSubDialog('review')">
+              <Icon class="altas-item-icon" color="rgb(24,144,255)" type="ios-happy" title="企业评价" size="36"/>
+            </Card>
+            <Card  class="altas-item" @click.native="showSubDialog('recruit')">
+              <Icon class="altas-item-icon" color="rgb(24,144,255)" type="md-person-add" title="企业招聘信息" size="36"/>
+            </Card>
+            <Card  class="altas-item" @click.native="showSubDialog('culture')">
+              <Icon class="altas-item-icon" color="rgb(24,144,255)" type="ios-images" title="企业文化建设" size="36"/>
+            </Card>
+          </div>
+        </div>
+    </Modal>
+
+    <!--  企业法人信息对话框  -->
+    <Modal
+        v-model="legalPersonDialog"
+        title="企业法人信息">
+      <p>{{currentCompany.legalPerson}}</p>
+      <p>Content of dialog</p>
+      <p>Content of dialog</p>
+      <p>Content of dialog</p>
+      <p>Content of dialog</p>
+      <p>Content of dialog</p>
+      <p>Content of dialog</p>
+      <p>Content of dialog</p>
+      <p>Content of dialog</p>
+    </Modal>
+
+    <!--  当前法人下的其他公司  -->
+    <Modal
+        v-model="otherCompaniesDialog"
+        title="当前法人下的其他公司">
+      <p>{{currentCompany.legalPerson}}</p>
+    </Modal>
+
+    <Modal
+        v-model="ERPStructureDialog"
+        width="900"
+        height="610"
+        title="公司经营组织架构">
+        <cycle-graph :currentCompany="currentCompany"></cycle-graph>
+    </Modal>
+
+    <Modal
+        v-model="staffStructureDialog"
+        title="公司人员组织架构">
+      <p>{{currentCompany.legalPerson}}</p>
+    </Modal>
+
+    <Modal
+        v-model="staffFlowDialog"
+        title="公司人员流动情况">
+      <p>{{currentCompany.legalPerson}}</p>
+    </Modal>
+
+    <Modal
+        v-model="marketValueDialog"
+        title="公司市值评估">
+      <p>{{currentCompany.legalPerson}}</p>
+    </Modal>
+
+    <Modal
+        v-model="companyReviewDialog"
+        title="公司评价">
+      <p>{{currentCompany.legalPerson}}</p>
+    </Modal>
+
+    <Modal
+        v-model="recruitmentInforDialog"
+        title="公司招聘信息">
+      <p>{{currentCompany.legalPerson}}</p>
+    </Modal>
+
+    <Modal
+        v-model="cultureDialog"
+        title="公司文化建设">
+      <p>{{currentCompany.legalPerson}}</p>
+    </Modal>
   </div>
 
 </template>
@@ -40,7 +156,7 @@
 <script>
     import global from '@/global.vue';
     import search from '@/components/search.vue';
-
+    import cycleGraph from "@/components/AntV-G2/cycleGraph" ;
     export default {
         data() {
             return {
@@ -49,6 +165,19 @@
                 colorFlag: 1,
                 recruitFlag: false,
                 spinShow: false,
+                currentCompany:Object,                 //当前点击了marker的公司
+                searchThisCompanyDialog:false,        //查找该公司对话框
+
+                legalPersonDialog: false,                   //企业法人信息
+                otherCompaniesDialog: false,                //当前法人下的其他公司
+                ERPStructureDialog: false,                  //公司经营组织架构
+                staffStructureDialog: false,                //公司人员组织架构
+                staffFlowDialog: false,                     //公司人员流动情况
+                marketValueDialog: false,                   //公司市值评估
+                companyReviewDialog: false,                 //公司评价
+                recruitmentInforDialog: false,              //公司招聘信息
+                cultureDialog: false,                       //公司文化建设
+
             }
         },
 
@@ -58,6 +187,37 @@
 
         },
         methods: {
+            showSubDialog(type){
+                switch (type) {
+                    case 'legalPerson':
+                        this.legalPersonDialog = true
+                        break;
+                    case 'otherCompany':
+                        this.otherCompaniesDialog = true
+                        break;
+                    case 'ERP':
+                        this.ERPStructureDialog = true
+                        break;
+                    case 'staff':
+                        this.staffStructureDialog = true
+                        break;
+                    case 'staffFlow':
+                        this.staffFlowDialog = true
+                        break;
+                    case 'market':
+                        this.marketValueDialog = true
+                        break;
+                    case 'review':
+                        this.companyReviewDialog = true
+                        break;
+                    case 'recruit':
+                        this.recruitmentInforDialog = true
+                        break;
+                    case 'culture':
+                        this.cultureDialog = true
+                        break;
+                }
+            },
 
             //地图初始化
             init: function () {
@@ -159,34 +319,32 @@
             },
             //定义marker的信息窗体
             inforShow: function (marker, company) {
-                var info = [];
-                info.push(
-                    "<div class='input-card content-window-card'><div><img style=\"float:left;\" src=\" https://webapi.amap.com/images/autonavi.png \"/></div> "
-                );
-                info.push("<div style=\"padding:7px 0px 0px 0px;\"><br><h4>" + company.name + "</h4><br>");
-                info.push("<p class='input-item'>企业法人 :" + company.legalPerson);
-                info.push("<p class='input-item'>联系电话 :" + company.phone + "/" + company.morePhone);
-                info.push("<p class='input-item'>社会统一信用代码 :" + company.creditCode);
-                // info.push("<p class='input-item'>成立日期 :"+ company.data);
-                // info.push("<p class='input-item'>注册资本 :"+ company.capital);
-                info.push("<p class='input-item'>地址 :" + company.address + "</p>");
-                info.push("<p class='input-item'>经营范围 :" + company.scope + "</p><br>");
-
-                var url = "../html/searchResult.html?name=" + company.name;
-
-                info.push("<p class='input-item'><a id='inforBoxToFind' href='" + url +
-                    "' target='blank'>查询该公司</a></p>");
-                info.push("<p class='input-item'><a id='inforBoxToFind' href='" + url +
-                    "' target='blank'>查询该公司时间轴</a></p>");
-                info.push("<p class='input-item'><a id='inforBoxToFind' href='" + url +
-                    "' target='blank'>查询该公司招聘信息</a></p></div></div>");
-                this.inforWindow = new AMap.InfoWindow({
-                    //设置位置锚点
-                    anchor: 'bottom-left',
-                    content: info.join(""), //使用默认信息窗体框样式，显示信息内容
-                })
-
-                this.inforWindow.open(global.map, marker.getPosition());
+                // var info = [];
+                // info.push(
+                //     "<div class='input-card content-window-card'><div><img style=\"float:left;\" src=\" https://webapi.amap.com/images/autonavi.png \"/></div> "
+                // );
+                // info.push("<div style=\"padding:7px 0px 0px 0px;\"><br><h4>" + company.name + "</h4><br>");
+                // info.push("<p class='input-item'>企业法人 :" + company.legalPerson);
+                // info.push("<p class='input-item'>联系电话 :" + company.phone + "/" + company.morePhone);
+                // info.push("<p class='input-item'>社会统一信用代码 :" + company.creditCode);
+                // // info.push("<p class='input-item'>成立日期 :"+ company.data);
+                // // info.push("<p class='input-item'>注册资本 :"+ company.capital);
+                // info.push("<p class='input-item'>地址 :" + company.address + "</p>");
+                // info.push("<p class='input-item'>经营范围 :" + company.scope + "</p><br>");
+                //
+                // var url = "../html/searchResult.html?name=" + company.name;
+                //
+                // info.push("<p class='input-item'><a id='inforBoxToFind'  @click.prevent='searchThisCompany'>查询该公司</a></p>");
+                //
+                // this.inforWindow = new AMap.InfoWindow({
+                //     //设置位置锚点
+                //     anchor: 'bottom-left',
+                //     content: info.join(""), //使用默认信息窗体框样式，显示信息内容
+                // })
+                //
+                // this.inforWindow.open(global.map, marker.getPosition());
+                this.currentCompany = company
+                this.searchThisCompany(this.currentCompany)
             },
 
             //该函数用于将其他公司地址转化为高德地图经纬度坐标,并且连线
@@ -331,19 +489,23 @@
                     case 5:
                         global.map.setMapStyle('amap://styles/darkblue');
                         break;
-
                 }
-
-
+            },
+            searchThisCompany(item){
+                console.log(item)
+                this.searchThisCompanyDialog = true;
             }
         },
         components: {
-            search,
+            search,cycleGraph
         }
     }
 </script>
 
 <style scoped>
+  li {
+    list-style: none;
+  }
   #container {
     margin: 0;
     margin-top: 0px;
@@ -374,5 +536,40 @@
     background-repeat: no-repeat;
     width: 50px;
     height: 50px;
+  }
+  .spiltBox {
+    display: flex;
+    flex-direction: row;
+    min-height: 300px;
+  }
+  .spilt-left {
+    border-right: 1px solid rgba(119,119,119,0.2);
+    padding:0px 20px;
+    width: 1500px;
+  }
+  .spilt-left p{
+    margin: 6px 0px;
+    cursor: default;
+  }
+  .spilt-right {
+    width: 1000px;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    padding:0px 20px;
+  }
+  .altas-item {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 80px;
+    height: 80px;
+    margin: 5px;
+  }
+  .split-left-tag {
+    margin-right: 10px;
+  }
+  .altas-item-icon {
+    line-height: 55px;
   }
 </style>

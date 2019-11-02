@@ -10,9 +10,10 @@ import 'iview/dist/styles/iview.css';
 import {store} from './store/store'
 import  echarts from 'echarts'
 import mockData from './mock'
+import G2 from '@antv/g2'
 
 
-
+Vue.use(G2)
 Vue.use(iView);
 Vue.use(VueAxios, axios);
 Vue.config.productionTip = false;
