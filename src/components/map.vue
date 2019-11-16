@@ -10,25 +10,39 @@
       <div id="optionBar">
         <ul>
           <li>
-<!--            <div class="icon-legalPerson"></div>-->
+            <div class="optionBar-item">
+              <Tooltip content="搜索结果" placement="left">
+                <Icon type="ios-paper" size="32" @click="openResult"/>
+              </Tooltip>
+            </div>
           </li>
           <li>
-            <div class=""></div>
+            <div class="optionBar-item">
+              <Tooltip content="当前法人其他企业" placement="left">
+                <Icon type="ios-contact" size="32" @click="findPersonOther"/>
+              </Tooltip>
+            </div>
           </li>
           <li>
-            <div class=""></div>
+            <div class="optionBar-item">
+              <Tooltip content="附近其他企业" placement="left">
+                <Icon type="md-paper-plane" size="32" @click="findAddressOtherDialog"/>
+              </Tooltip>
+            </div>
           </li>
           <li>
-            <div class=""></div>
+            <div class="optionBar-item">
+              <Tooltip content="清除所有点标记" placement="left">
+                <Icon type="ios-close-circle" size="32" @click=""/>
+              </Tooltip>
+            </div>
           </li>
           <li>
-              <div class=""></div>
-          </li>
-          <li>
-              <div class=""></div>
-          </li>
-          <li>
-              <div class=""></div>
+            <div class="optionBar-item">
+              <Tooltip content="更换皮肤" placement="left">
+                <Icon type="md-shirt" size="32" @click="changeColor"/>
+              </Tooltip>
+            </div>
           </li>
         </ul>
       </div>
@@ -87,23 +101,82 @@
     <!--  企业法人信息对话框  -->
     <Modal
         v-model="legalPersonDialog"
-        title="企业法人信息">
-      <p>{{currentCompany.legalPerson}}</p>
-      <p>Content of dialog</p>
-      <p>Content of dialog</p>
-      <p>Content of dialog</p>
-      <p>Content of dialog</p>
-      <p>Content of dialog</p>
-      <p>Content of dialog</p>
-      <p>Content of dialog</p>
-      <p>Content of dialog</p>
+        title="企业法人信息"
+    >
+      <Tabs value="profile">
+        <TabPane label="个人简介" name="profile">
+          <Avatar style="display: block;margin: 10px auto;height: 80px;width: 60px" shape="square" icon="ios-person" size="large" />
+          <p style="text-align: center">{{currentCompany.legalPerson}}</p>
+          <Divider dashed />
+          <p style="text-indent: 10px">
+            {{currentCompany.legalPerson}}，男，汉族，1958年2月生，四川成都人，1974年12月参加工作，1978年9月加入中国共产党，在职研究生学历，法学博士学位。
+            现任十九届中央委员，安徽省委书记，省十三届人大常委会主任、党组书记。1978年9月加入中国共产党，在职研究生学历，法学博士学位。
+            现任十九届中央委员，安徽省委书记，省十三届人大常委会主任、党组书记。1978年9月加入中国共产党，在职研究生学历，法学博士学位。
+            现任十九届中央委员，安徽省委书记，省十三届人大常委会主任、党组书记。1978年9月加入中国共产党，在职研究生学历，法学博士学位。
+
+            省十三届人大常委会主任、党组书记。1978年9月加入中国共产党，在职研究生学历，法学博士学位。
+            现任十九届中央委员，安徽省委书记，省十三届人大常委会主任、党组书记。1978年9月加入中国共产党，在职研究生学历，法学博士学位。
+            现任十九届中央委员，安徽省委书记，省十三届人大常委会主任、党组书记。
+          </p>
+        </TabPane>
+        <TabPane label="曾经任职" name="lastPositon">
+          <Timeline style="margin: 15px">
+            <TimelineItem>
+              <p class="personTime">1976年</p>
+              <p class="personTimeContent">Apple I 问世</p>
+            </TimelineItem>
+            <TimelineItem>
+              <p class="personTime">1984年</p>
+              <p class="personTimeContent">发布 Macintosh</p>
+            </TimelineItem>
+            <TimelineItem>
+              <p class="personTime">2007年</p>
+              <p class="personTimeContent">发布 iPhone</p>
+            </TimelineItem>
+            <TimelineItem>
+              <p class="personTime">2010年</p>
+              <p class="personTimeContent">发布 iPad</p>
+            </TimelineItem>
+            <TimelineItem>
+              <p class="personTime">2011年10月5日</p>
+              <p class="personTimeContent">史蒂夫·乔布斯去世</p>
+            </TimelineItem>
+            <TimelineItem>
+              <p class="personTime">2007年</p>
+              <p class="personTimeContent">发布 iPhone</p>
+            </TimelineItem>
+          </Timeline>
+        </TabPane>
+        <TabPane label="拥有公司" name="ownedCompony">
+
+        </TabPane>
+        <TabPane label="合作伙伴" name="partner">暂无</TabPane>
+      </Tabs>
+
     </Modal>
 
     <!--  当前法人下的其他公司  -->
     <Modal
         v-model="otherCompaniesDialog"
         title="当前法人下的其他公司">
-      <p>{{currentCompany.legalPerson}}</p>
+        <relation-graph :currentCompany="currentCompany"></relation-graph>
+    </Modal>
+
+    <!--  附近地址公司  -->
+    <Modal v-model="addressDegreeDialog" width="360">
+      <p slot="header" style="color:cornflowerblue;text-align:center">
+        <Icon type="ios-information-circle"></Icon>
+        <span>请选择地址精细程度</span>
+      </p>
+      <div style="text-align:left">
+        <Select v-model="degree" style="width:200px">
+          <Option v-for="item in degreeList" :value="item.value" :key="item.value">{{ item.label }}</Option>
+        </Select>
+        <p style="color: red;margin-top: 40px">注意：当选择精细程度较低时，需加载大量数据，可能会造成加载较慢的情况</p>
+      </div>
+      <div slot="footer">
+        <Button type="primary" size="large" long  @click="findAddressOther(degree)">搜索</Button>
+      </div>
     </Modal>
 
     <Modal
@@ -122,14 +195,25 @@
 
     <Modal
         v-model="staffFlowDialog"
-        title="公司人员流动情况">
-      <p>{{currentCompany.legalPerson}}</p>
+        title="公司人员流动情况"
+        width="900"
+        >
+        <Staff-flow></Staff-flow>
     </Modal>
 
     <Modal
         v-model="marketValueDialog"
-        title="公司市值评估">
-      <p>{{currentCompany.legalPerson}}</p>
+        title="公司市值评估"
+        width="900"
+    >
+        <div class="market-value-dialog-container">
+          <div class="market-value-item">
+            <broken-line :currentCompany="currentCompany"></broken-line>
+          </div>
+<!--          <div class="market-value-item">-->
+<!--            <dotted-bar :currentCompany="currentCompany"></dotted-bar>-->
+<!--          </div>-->
+        </div>
     </Modal>
 
     <Modal
@@ -156,7 +240,13 @@
 <script>
     import global from '@/global.vue';
     import search from '@/components/search.vue';
-    import cycleGraph from "@/components/AntV-G2/cycleGraph" ;
+    import cycleGraph from "@/components/Echarts/cycleGraph" ;
+    import DottedBar from "@/components/Echarts/DottedBar" ;
+    import BrokenLine from "@/components/Echarts/BrokenLine"
+    import relationGraph from "@/components/Echarts/relationGraph"
+    import StaffFlow from "@/components/Echarts/StaffFlow"
+
+
     export default {
         data() {
             return {
@@ -167,6 +257,7 @@
                 spinShow: false,
                 currentCompany:Object,                 //当前点击了marker的公司
                 searchThisCompanyDialog:false,        //查找该公司对话框
+                addressDegreeDialog:false,            //查找附近地址公司对话框
 
                 legalPersonDialog: false,                   //企业法人信息
                 otherCompaniesDialog: false,                //当前法人下的其他公司
@@ -178,13 +269,34 @@
                 recruitmentInforDialog: false,              //公司招聘信息
                 cultureDialog: false,                       //公司文化建设
 
+                degreeList:[
+                    {
+                        value: 'city',
+                        label: '精确到市'
+                    },{
+                        value: 'county',
+                        label: '精确到县'
+                    },{
+                        value: 'town',
+                        label: '精确到镇'
+                    },{
+                        value: 'area',
+                        label: '精确到区'
+                    },{
+                        value: 'road',
+                        label: '精确到路'
+                    },{
+                        value: 'building',
+                        label: '精确到楼'
+                    },
+                ],
+                degree:'',
+
             }
         },
 
         mounted() {
             this.init();
-            console.log("全局变量" + global.map);
-
         },
         methods: {
             showSubDialog(type){
@@ -267,7 +379,7 @@
                     AMap.event.addListener(geolocation, 'error', onError)
 
                     function onComplete(data) {
-                        console.log(data);
+
                     }
 
                     function onError(data) {
@@ -281,22 +393,18 @@
             },
 
             //接受search组件传来的值，对地图进行对该企业的定位
-            pos: function (infor) {
-                this.$company = infor;
-                console.log(infor);
-                this.getAddressLocation(infor);
-                console.log(this.$company);
+            pos: function (companySelected) {
+                this.$company = companySelected;
+                this.getAddressLocation(companySelected);
             },
             getAddressLocation: function (infor) {
-                var that = this;
+                var _this = this
                 var geocoder = new AMap.Geocoder();
-                geocoder.getLocation(infor.address, function (status, result) {
+                geocoder.getLocation(infor.address, function(status, result){
                     if (status === 'complete' && result.geocodes.length) {
 
                         var point = result.geocodes[0].location;
-                        console.log(point);
-                        that.$company.point = point;
-                        console.log(that.$company.point);
+                        _this.$company.point = point;
                         var marker = new AMap.Marker({
                             // icon: '/src/assets/images/pos.png',
                             title: '点击查看基本信息',
@@ -307,8 +415,7 @@
                         global.map.setFitView(marker);
                         //给标记添加事件，让其显示信息窗格，显示公司信息
                         AMap.event.addListener(marker, 'click', function () {
-                            console.log(marker.getPosition());
-                            that.inforShow(marker, infor);
+                            _this.inforShow(marker, infor);
                         })
                         return point;
                     }
@@ -319,44 +426,19 @@
             },
             //定义marker的信息窗体
             inforShow: function (marker, company) {
-                // var info = [];
-                // info.push(
-                //     "<div class='input-card content-window-card'><div><img style=\"float:left;\" src=\" https://webapi.amap.com/images/autonavi.png \"/></div> "
-                // );
-                // info.push("<div style=\"padding:7px 0px 0px 0px;\"><br><h4>" + company.name + "</h4><br>");
-                // info.push("<p class='input-item'>企业法人 :" + company.legalPerson);
-                // info.push("<p class='input-item'>联系电话 :" + company.phone + "/" + company.morePhone);
-                // info.push("<p class='input-item'>社会统一信用代码 :" + company.creditCode);
-                // // info.push("<p class='input-item'>成立日期 :"+ company.data);
-                // // info.push("<p class='input-item'>注册资本 :"+ company.capital);
-                // info.push("<p class='input-item'>地址 :" + company.address + "</p>");
-                // info.push("<p class='input-item'>经营范围 :" + company.scope + "</p><br>");
-                //
-                // var url = "../html/searchResult.html?name=" + company.name;
-                //
-                // info.push("<p class='input-item'><a id='inforBoxToFind'  @click.prevent='searchThisCompany'>查询该公司</a></p>");
-                //
-                // this.inforWindow = new AMap.InfoWindow({
-                //     //设置位置锚点
-                //     anchor: 'bottom-left',
-                //     content: info.join(""), //使用默认信息窗体框样式，显示信息内容
-                // })
-                //
-                // this.inforWindow.open(global.map, marker.getPosition());
                 this.currentCompany = company
                 this.searchThisCompany(this.currentCompany)
             },
 
             //该函数用于将其他公司地址转化为高德地图经纬度坐标,并且连线
             //异步
-            getOtherCompanyAddress: function (address, targetCompany) {
+            getOtherCompanyAddress: function (address,targetCompany,type) {
                 var that = this;
                 var geocoder = new AMap.Geocoder();
                 geocoder.getLocation(address, function (status, result) {
                     if (status === 'complete' && result.geocodes.length) {
-                        console.log("地址转化成功：" + result);
+                        console.log("result.geocodes：" + result.geocodes);
                         var point = result.geocodes[0].location;
-                        console.log(point);
                         //新建标记
                         var marker = new AMap.Marker({
                             // icon: '../img/pos.png',
@@ -367,7 +449,6 @@
                         marker.setPosition(point);
                         //给标记添加事件，让其显示信息窗格，显示公司信息
                         AMap.event.addListener(marker, 'click', function () {
-                            console.log(marker.getPosition());
                             that.inforShow(marker, targetCompany);
                         })
                         //新建同主公司的连线
@@ -384,7 +465,22 @@
                         //添加连线
                         global.map.add(polyline);
                         //设置文本
-                        that.createLineText(that.$company.point, point, '相同法人')
+                        if(type === 'samePerson'){
+                            that.createLineText(that.$company.point, point, '相同法人')
+                        }else if(type === 'city'){
+                            that.createLineText(that.$company.point, point, '相同市')
+                        }else if(type === 'county'){
+                            that.createLineText(that.$company.point, point, '相同县')
+                        }else if(type === 'town'){
+                            that.createLineText(that.$company.point, point, '相同镇')
+                        }else if(type === 'area'){
+                            that.createLineText(that.$company.point, point, '相同区域')
+                        }else if(type === 'road'){
+                            that.createLineText(that.$company.point, point, '相同道路')
+                        }else if(type === 'building'){
+                            that.createLineText(that.$company.point, point, '相同建筑')
+                        }
+
                         return point;
                     }
                     if (status === 'err') {
@@ -417,31 +513,29 @@
             //侧边按钮组：
             //打开、关闭搜索结果栏
             openResult: function () {
-                console.log(this.$company);
-                console.log(this.$companyList);
                 if (this.$company.hasOwnProperty('name')) {
                     this.$refs.showResult.resultWarpper = !this.$refs.showResult.resultWarpper;
                 } else {
-                    alert("请先搜索企业！")
+                    this.$Message['info']({
+                        background: true,
+                        content: '请先搜索企业！'
+                    });
                 }
-
             },
 
             //功能：查找相同法人下的其他公司，以getOtherCompanyAddress(),createLineText()函数为基础
             findPersonOther: function () {
+                // global.map.marker.setMap(null);
                 this.spinShow = !this.spinShow
-                console.log(this.$company);
                 if (this.$company.hasOwnProperty('legalPerson') == true) {
-                    console.log(this.$company.legalPerson);
                     var url = "http://106.14.151.119:3000/api/search?legalPerson=" + this.$company.legalPerson;
                     //获取法人名字，发送查找该法人旗下的公司的请求
                     this.$http.get(url, {}).then(res => {
-                        console.log(res);
                         if (res.data.length != 2) {
                             //如果有其他企业，新建点 连线
                             for (var i = 1; i < res.data.length; i++) {
                                 //转化地址并添加标记
-                                this.getOtherCompanyAddress(res.data[i].address, res.data[i]);
+                                this.getOtherCompanyAddress(res.data[i].address, res.data[i],'samePerson');
                             }
                             //地图缩放到全局
                             global.map.setZoom(12);
@@ -453,18 +547,97 @@
                                 title: '提示',
                                 content: '暂无该法人下其它企业信息'
                             });
-                        }
-                        ;
-
+                        };
                     }, res => {
                         this.spinShow = !this.spinShow
                         console.log("出现错误" + res);
                     })
                 } else {
                     this.spinShow = !this.spinShow
-                    alert("请先搜索企业！")
+                    this.$Message['info']({
+                        background: true,
+                        content: '请先搜索企业！'
+                    });
                 }
 
+            },
+
+            //查找附近其他公司对话框
+            findAddressOtherDialog(){
+                if (this.$company.hasOwnProperty('address') == true){
+                    this.addressDegreeDialog = true
+                }else{
+                    this.$Message['info']({
+                        background: true,
+                        content: '请先搜索企业！'
+                    });
+                }
+
+            },
+
+            //功能：查找附近其他公司，以getOtherCompanyAddress(),createLineText()函数为基础
+            findAddressOther: function (degree) {
+                if (this.$company.hasOwnProperty('name') == true) {
+                    //检索相近地址
+                    if(degree === ''){
+                        this.$Message['info']({
+                            background: true,
+                            content: '请选择精细程度！'
+                        });
+                        return
+                    }
+                    let degreeChosed
+                    let address
+                    let matchingAddress = this.$company.address
+                    switch (degree) {
+                        case 'city':degreeChosed = '市'
+                            break
+                        case 'county':degreeChosed = '县'
+                            break
+                        case 'town':degreeChosed = '镇'
+                            break
+                        case 'area':degreeChosed = '区'
+                            break
+                        case 'road':degreeChosed = '路'
+                            break
+                        case 'building':degreeChosed = '楼'
+                            break
+                    }
+                    if(matchingAddress.indexOf(degreeChosed) !== -1){
+                        address = String(matchingAddress.split(degreeChosed)[0])
+                    }else{
+                        this.$Message.error(`该公司地址中不包含“${degreeChosed}”的地址划分，请重新选择！`);
+                    }
+                    this.spinShow = true
+                    this.addressDegreeDialog = false
+                    var url = "http://106.14.151.119:3000/api/search?address=" + address;
+                    this.$http.get(url).then(res => {
+                        if (res.data.length != 2) {
+                            //如果有其他企业，新建点 连线
+                            for (var i = 1; i < res.data.length; i++) {
+                                //转化地址并添加标记
+                                this.getOtherCompanyAddress(res.data[i].address, res.data[i],degree);
+                            }
+                            //地图缩放到全局
+                            global.map.setZoom(12);
+                            this.spinShow = !this.spinShow
+                        } else {
+                            this.spinShow = !this.spinShow
+                            //如果无其他企业
+                            this.$Modal.error({
+                                title: '提示',
+                                content: '附近暂无其他企业'
+                            });
+                        };
+                        this.spinShow = false
+                    }, err => {
+                        this.spinShow = false;
+                        console.log("出现错误" + res);
+                    })
+                } else {
+                    this.spinShow = !this.spinShow
+                    alert("请先搜索企业！")
+                }
             },
 
             //更改主题样式
@@ -492,12 +665,16 @@
                 }
             },
             searchThisCompany(item){
-                console.log(item)
                 this.searchThisCompanyDialog = true;
             }
         },
         components: {
-            search,cycleGraph
+            search,
+            cycleGraph,
+            DottedBar,
+            BrokenLine,
+            relationGraph,
+            StaffFlow
         }
     }
 </script>
@@ -515,10 +692,8 @@
     width: 100%;
     z-index: 0;
   }
-  #optionBar {
-
-  }
   #optionBar ul{
+    margin-top: 20px;
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -531,12 +706,13 @@
     width: 100%;
     height: 55px;
   }
-  .icon-legalPerson {
-    background-image: url("/src/assets/images/legalPerson-s.svg");
-    background-repeat: no-repeat;
-    width: 50px;
-    height: 50px;
+  .optionBar-item {
+    text-align: center;
   }
+  .optionBar-item:hover {
+    color: cornflowerblue;
+  }
+
   .spiltBox {
     display: flex;
     flex-direction: row;
@@ -571,5 +747,22 @@
   }
   .altas-item-icon {
     line-height: 55px;
+  }
+  .market-value-dialog-container {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex:1 1 auto;
+    flex-direction: column;
+  }
+  .market-value-dialog-container > market-value-item {
+    width: 48%;
+  }
+  .personTime{
+    font-size: 14px;
+    font-weight: bold;
+  }
+  .personTimeContent{
+    padding-left: 5px;
   }
 </style>

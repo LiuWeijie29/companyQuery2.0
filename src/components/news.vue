@@ -145,7 +145,7 @@
   .lastedNews{
     width: 18%;
     height: 600px;
-    background-color: peachpuff;
+    /*background-color: peachpuff;*/
     margin: 8px;
   }
   .item-img{

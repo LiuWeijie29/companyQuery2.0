@@ -2,12 +2,52 @@
   <div>
     <div v-if="this.$store.state.$company.name">
         <div id="chartContainer">
-            <div class="chartItem chart-01"></div>
-            <div class="chartItem chart-02"></div>
-            <div class="chartItem chart-03"></div>
-            <div class="chartItem chart-04"></div>
-            <div class="chartItem chart-05"></div>
-            <div class="chartItem chart-06"></div>
+          <Card class="chartItem ">
+          <div style="text-align:center">
+            <h3>A high quality UI Toolkit based on Vue.js 施工中</h3>
+          </div>
+        </Card>
+          <Card class="chartItem ">
+            <div style="text-align:center">
+              <h3>A high quality UI Toolkit based on Vue.js 施工中</h3>
+            </div>
+          </Card>
+          <Card class="chartItem ">
+            <div style="text-align:center">
+              <h3>A high quality UI Toolkit based on Vue.js 施工中</h3>
+            </div>
+          </Card>
+          <Card class="chartItem ">
+            <div style="text-align:center">
+              <h3>A high quality UI Toolkit based on Vue.js 施工中</h3>
+            </div>
+          </Card>
+          <Card class="chartItem ">
+            <div style="text-align:center">
+              <h3>A high quality UI Toolkit based on Vue.js 施工中</h3>
+            </div>
+          </Card>
+          <Card class="chartItem ">
+            <div style="text-align:center">
+              <h3>A high quality UI Toolkit based on Vue.js 施工中</h3>
+            </div>
+          </Card>
+          <Card class="chartItem ">
+            <div style="text-align:center">
+              <h3>A high quality UI Toolkit based on Vue.js 施工中</h3>
+            </div>
+          </Card>
+          <Card class="chartItem ">
+            <div style="text-align:center">
+              <h3>A high quality UI Toolkit based on Vue.js 施工中</h3>
+            </div>
+          </Card>
+<!--            <div class="chartItem chart-01"></div>-->
+<!--            <div class="chartItem chart-02"></div>-->
+<!--            <div class="chartItem chart-03"></div>-->
+<!--            <div class="chartItem chart-04"></div>-->
+<!--            <div class="chartItem chart-05"></div>-->
+<!--            <div class="chartItem chart-06"></div>-->
         </div>
     </div>
     <div v-else class="pleaseSearchTip">
@@ -55,13 +95,10 @@
       align-items: start;
   }
   .chartItem{
+      margin: 15px;
       padding: 15px;
-      width: 33.3%;
-      height: 400px;
-      background-color: cornflowerblue;
+      width: 20%;
+      height: 300px;
   }
-  #myChart{
-      width: 500px;
-      height: 500px;
-  }
+
 </style>

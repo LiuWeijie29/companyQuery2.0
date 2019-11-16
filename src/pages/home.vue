@@ -21,8 +21,8 @@
                     <li class="nav-item" @click="cur=4" :class="{selected:cur == 4}">招聘信息</li>
                     <li class="nav-item" @click="cur=5" :class="{selected:cur == 5}">新闻资讯</li>
                     <li class="nav-item" @click="cur=6" :class="{selected:cur == 6}">企业云图</li>
-                    <li class="nav-item" @click="cur=7" :class="{selected:cur == 7}">数据来源</li>
-                    <li class="nav-item" @click="cur=8" :class="{selected:cur == 8}">更多功能</li>
+<!--                    <li class="nav-item" @click="cur=7" :class="{selected:cur == 7}">数据来源</li>-->
+<!--                    <li class="nav-item" @click="cur=8" :class="{selected:cur == 8}">更多功能</li>-->
                 </ul>
             </Col>
             <Col span="20">

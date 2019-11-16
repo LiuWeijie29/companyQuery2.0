@@ -2,7 +2,13 @@
 	<div class="container">
 		<Row type="flex" justify="space-between" class="code-row-bg">
 			<Col span="16">
-			<Input v-model="userIpt" value="南昌" placeholder="请输入您要查询的企业关键信息" size="large" autofocus @keyup.enter.native="searchCompany"></Input>
+        <Input  v-model="userIpt" value="南昌" placeholder="请输入您要查询的企业关键信息" size="large" autofocus @keyup.enter.native="searchCompany"></Input>
+        <Tooltip  placement="bottom-start">
+          <div slot="content" style="white-space: normal;">
+            <p><i>可搜索的关键词</i></p>
+            <p>企业名称，地址，法人信息，社会统一信用代码，联系号码、邮箱</p>
+          </div>
+        </Tooltip>
 			</Col>
 			<Col span="8">
 			<Button id="searchBtn"  @click="searchCompany" size="large" icon="ios-search" type="primary" :loading="sBtnLoading">搜索</Button>
@@ -25,7 +31,8 @@
 				resultWarpper: false,//控制抽屉开关
 				result:'',
 				sBtnLoading:false,
-				isSelected:false
+				isSelected:false,
+        page:1,
 			}
 		},
 		methods: {
@@ -38,17 +45,16 @@
 				} else {
 					//如果用户输入没问题 那么就发送数据请求
 					this.sBtnLoading = true;//按钮变成正在搜索状态
-					this.$http.get(this.url + this.userIpt , {}).then(res => {
+					this.$http.get(this.url + this.userIpt + '&page=' + this.page).then(res => {
 						console.log(res.data);
 						this.sBtnLoading = false;
 						if(res.data.length > 1){
                 this.resultWarpper = true;
-                this.result = res.data;
+                console.log("res:",res.data.slice(1))
+                this.result = res.data.slice(1);
                 //将请求到的所有数据注册到全局变量中
-                this.$store.state.$companyList = res.data;
-                console.log(this.$store.state.$companyList);
-                this.$companyList = res.data;
-                console.log(this.$companyList);
+                this.$store.state.$companyList = res.data.slice(1);
+                this.$companyList = res.data.slice(1);
             }else{
                 this.$Modal.error({
                     title: '提示',
@@ -60,22 +66,16 @@
 					})
 				}
 			},
-			posMap:function(infor,index) {
+			posMap:function(companySelected,index) {
 				//拿到被点击的公司下标，并把该公司的信息注册到全局变量company中 给map父组件传递信息窗体中的信息
-				console.log(index);
 				this.$company = this.$companyList[index];
-				console.log(this.$company);
 				//将被选中的公司提交到中央管理器
 				this.$store.state.$company = this.$companyList[index];
-				console.log(this.$store.state.$company);
 				this.$store.commit('companyHandle');//提交变更状态
-				this.$emit("getInfor",infor);
+				this.$emit("getInfor",companySelected);
 				this.resultWarpper = false;//点击列表其中之一后关闭抽屉
 			}
 		},
-		computed:{
-
-		}
 	}
 </script>
 
