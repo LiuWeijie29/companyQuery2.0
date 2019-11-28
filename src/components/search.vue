@@ -2,16 +2,13 @@
 	<div class="container">
 		<Row type="flex" justify="space-between" class="code-row-bg">
 			<Col span="16">
-        <Input  v-model="userIpt" value="南昌" placeholder="请输入您要查询的企业关键信息" size="large" autofocus @keyup.enter.native="searchCompany"></Input>
-        <Tooltip  placement="bottom-start">
+        <Tooltip  placement="bottom-start" :delay="1000">
+          <Input  v-model="userIpt"  placeholder="请输入您要查询的企业关键信息"  size="large" search enter-button="Search" style="width: 450px;" autofocus @on-search="searchCompany"></Input>
           <div slot="content" style="white-space: normal;">
             <p><i>可搜索的关键词</i></p>
             <p>企业名称，地址，法人信息，社会统一信用代码，联系号码、邮箱</p>
           </div>
         </Tooltip>
-			</Col>
-			<Col span="8">
-			<Button id="searchBtn"  @click="searchCompany" size="large" icon="ios-search" type="primary" :loading="sBtnLoading">搜索</Button>
 			</Col>
 		</Row>
 		<Drawer title="搜索结果" @keyup.esc.native="closable = false" :closable="true" :scrollable="true" :draggable="true" width="300" v-model="resultWarpper" class-name="resultWarpper">
@@ -30,7 +27,6 @@
 				url: 'http://106.14.151.119:3000/api/search?name=',//数据请求地址
 				resultWarpper: false,//控制抽屉开关
 				result:'',
-				sBtnLoading:false,
 				isSelected:false,
         page:1,
 			}
@@ -44,10 +40,10 @@
 					});
 				} else {
 					//如果用户输入没问题 那么就发送数据请求
-					this.sBtnLoading = true;//按钮变成正在搜索状态
+					this.spinShow = true;//按钮变成正在搜索状态
 					this.$http.get(this.url + this.userIpt + '&page=' + this.page).then(res => {
 						console.log(res.data);
-						this.sBtnLoading = false;
+						this.spinShow = false;
 						if(res.data.length > 1){
                 this.resultWarpper = true;
                 console.log("res:",res.data.slice(1))
@@ -90,10 +86,14 @@
 	}
 
 	.container input {
+    width: 100%;
 		display: inline-block;
 		margin: 0 auto;
 	}
-
+  .search-container{
+    display: flex;
+    flex-direction: row;
+  }
 	#searchBtn {
 		margin-left: 2px;
 	}
