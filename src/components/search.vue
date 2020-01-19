@@ -11,8 +11,9 @@
         </Tooltip>
 			</Col>
 		</Row>
-		<Drawer title="搜索结果" @keyup.esc.native="closable = false" :closable="true" :scrollable="true" :draggable="true" width="300" v-model="resultWarpper" class-name="resultWarpper">
-			<CellGroup v-for="(item,index) in result" :key="item.id">
+		<Drawer title="搜索结果" @keyup.esc.native="closable = false" :closable="true" :scrollable="true" :draggable="true" width="300" :mask =false v-model="resultWarpper" class-name="resultWarpper">
+      <Button type="info" ghost @click="showAllOnMap" style="margin-bottom: 8px;margin-left: 15px">在地图中显示所有结果</Button>
+      <CellGroup v-for="(item,index) in result" :key="item.id">
 			    <Cell :title="item.name" :selected="isSelected" @click.native="posMap(item,index)" />
 			</CellGroup>
 		</Drawer>
@@ -20,6 +21,7 @@
 </template>
 
 <script>
+  import global from '@/global.vue';
 	export default {
 		data() {
 			return {
@@ -29,9 +31,13 @@
 				result:'',
 				isSelected:false,
         page:1,
+        showAll: false,
 			}
 		},
 		methods: {
+        //clearInfoWindow() 清除地图上的信息窗体。
+        //removeControl(obj:Object) 移除地图上的指定控件
+
 			searchCompany: function() {
 				if (this.userIpt == '') {
 					this.$Modal.error({
@@ -42,15 +48,14 @@
 					//如果用户输入没问题 那么就发送数据请求
 					this.spinShow = true;//按钮变成正在搜索状态
 					this.$http.get(this.url + this.userIpt + '&page=' + this.page).then(res => {
-						console.log(res.data);
 						this.spinShow = false;
 						if(res.data.length > 1){
                 this.resultWarpper = true;
-                console.log("res:",res.data.slice(1))
                 this.result = res.data.slice(1);
                 //将请求到的所有数据注册到全局变量中
                 this.$store.state.$companyList = res.data.slice(1);
                 this.$companyList = res.data.slice(1);
+
             }else{
                 this.$Modal.error({
                     title: '提示',
@@ -70,7 +75,16 @@
 				this.$store.commit('companyHandle');//提交变更状态
 				this.$emit("getInfor",companySelected);
 				this.resultWarpper = false;//点击列表其中之一后关闭抽屉
-			}
+			},
+      showAllOnMap:function () {
+          global.map.setZoom(12)
+          //点击按钮后把结果都用标记显示出来
+          var len = this.$store.state.$companyList.length
+          for(var i =0 ;i<len ;i++){
+              this.$emit('getAddressLocationAll',this.$store.state.$companyList[i])
+          }
+          this.$store.state.$isHaveSelectedToggle = true
+      }
 		},
 	}
 </script>
@@ -80,7 +94,7 @@
 		position: absolute;
 		top: 50px;
 		left: 50%;
-		transform: translateX(-50%);
+		transform: translateX(-30%);
 		width: 40%;
 		z-index: 2;
 	}

@@ -4,28 +4,21 @@
             <headerNav></headerNav>
         </div>
         <div class="content">
-            <Col span="4">
+          <Drawer title="查询助手" placement="left" :closable="false" v-model="companyAssHandle">
                 <ul class="nav-tab">
-                    <h2>菜单</h2>
-<!--                    <keep-alive>-->
-<!--                      <router-link tag="li" class="nav-item" to="/home/map">企业地图</router-link>-->
-<!--                    </keep-alive>-->
-<!--                    <keep-alive>-->
-<!--                      <router-link tag="li" class="nav-item" to="/home/altas">企业图谱</router-link>-->
-<!--                    </keep-alive>-->
-
                     <li class="nav-item" @click="cur=0" :class="{selected:cur == 0}">企业地图</li>
                     <li class="nav-item" @click="cur=1" :class="{selected:cur == 1}">企业图谱</li>
                     <li class="nav-item" @click="cur=2" :class="{selected:cur == 2}">基本信息</li>
                     <li class="nav-item" @click="cur=3" :class="{selected:cur == 3}">发展时间轴</li>
                     <li class="nav-item" @click="cur=4" :class="{selected:cur == 4}">招聘信息</li>
                     <li class="nav-item" @click="cur=5" :class="{selected:cur == 5}">新闻资讯</li>
-                    <li class="nav-item" @click="cur=6" :class="{selected:cur == 6}">企业云图</li>
+<!--                    <li class="nav-item" @click="cur=6" :class="{selected:cur == 6}">自由区域查询</li>-->
 <!--                    <li class="nav-item" @click="cur=7" :class="{selected:cur == 7}">数据来源</li>-->
 <!--                    <li class="nav-item" @click="cur=8" :class="{selected:cur == 8}">更多功能</li>-->
                 </ul>
-            </Col>
-            <Col span="20">
+            </Drawer>
+            <Col span="24" style="position: relative">
+                <button id="companyAssBtn" @click="companyAssHandle = !companyAssHandle">查询助手</button>
                 <div class="RWarp">
                     <!-- 通过左边的tabs栏切换右边 RWarp的组件 -->
                     <gaodeMap v-show="cur==0"></gaodeMap>
@@ -34,9 +27,9 @@
                     <timeLine v-if="cur==3"></timeLine>
                     <recruit v-if="cur==4"></recruit>
                     <news v-show="cur==5"></news>
-                    <keep-alive>
-                      <cloudMap v-if="cur==6"></cloudMap>
-                    </keep-alive>
+<!--                    <keep-alive>-->
+<!--                      <cloudMap v-if="cur==6"></cloudMap>-->
+<!--                    </keep-alive>-->
                     <dataSource v-show="cur==7"></dataSource>
                     <more v-show="cur==8"></more>
                 </div>
@@ -62,6 +55,7 @@
     export default {
         data() {
             return {
+                companyAssHandle: false,
                 switchValue: true,
                 cur: 0,
             }
@@ -147,5 +141,19 @@
     }
     .selected{
         background-color: aliceblue;
+    }
+    #companyAssBtn{
+      background-color: #2d8cf0;
+      font-family: "Microsoft YaHei UI";
+      font-size: 16px;
+      color: white;
+      position: fixed;
+      top: calc(50% - 60px);
+      left: -3px;
+      height: 120px;
+      width: 35px;
+      z-index: 99;
+      writing-mode:tb-rl;
+      border-radius: 8px;
     }
 </style>

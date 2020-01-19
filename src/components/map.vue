@@ -1,7 +1,8 @@
 <template>
   <div>
-    <search @getInfor="pos" ref="showResult"></search>
     <Col span="23">
+<!--      <search @getInfor="pos"  ref="showResult"></search>-->
+      <search @getInfor="pos" @getAddressLocationAll="getAddressLocation" ref="showResult"></search>
       <div id="container">
         <Spin size="large" fix v-if="spinShow"></Spin>
         <div id="panel"></div>
@@ -33,7 +34,7 @@
           </li>
           <li>
             <div class="optionBar-item">
-              <Tooltip content="清除所有点标记" placement="left">
+              <Tooltip content="清除所有标记" placement="left">
                 <Icon type="ios-close-circle" size="32" @click="removeMarkers"/>
               </Tooltip>
             </div>
@@ -41,21 +42,27 @@
           <li>
             <div class="optionBar-item">
               <Tooltip content="周边POI搜索" placement="left">
-                <Icon type="md-search" size="32" @click="findNearby"/>
+                <Icon type="md-search" size="32" @click="openPOIDialog"/>
               </Tooltip>
             </div>
           </li>
           <li>
             <div class="optionBar-item">
               <Tooltip content="更换皮肤" placement="left">
-                <Icon type="md-shirt" size="32" @click="changeColor"/>
+                <Icon type="md-shirt" size="32" @click="changeTheme"/>
+              </Tooltip>
+            </div>
+          </li>
+          <li>
+            <div class="optionBar-item">
+              <Tooltip content="自由区域查询" placement="left">
+                <Icon type="md-flag" size="32" @click="toRegionQuery"/>
               </Tooltip>
             </div>
           </li>
         </ul>
       </div>
     </Col>
-
 
     <!--  点击Marker后出现的对话框  -->
     <Modal
@@ -188,21 +195,19 @@
     </Modal>
 
     <!--  POI搜索弹窗  -->
-    <Modal v-model="POIDialog" width="600">
+    <Modal v-model="POIDialog" width="450">
       <p slot="header" style="color:cornflowerblue;text-align:center">
         <Icon type="ios-information-circle"></Icon>
         <span>搜索公司附近POI点</span>
       </p>
       <div style="text-align:left">
-        <p style="color: dodgerblue;margin: 10px 0px">请选择POI类型</p>
-        <Select v-model="POItype" style="width:90%;margin-bottom: 20px" multiple :max-tag-count="4">
-          <Option v-for="item in POItypeList" :value="item.value" :key="item.value">{{ item.label }}</Option>
-        </Select>
-        <p style="color: dodgerblue;margin: 10px 0px">请选择距离该公司范围</p>
-        <Slider v-model="POIrangeList" :step="10" show-stops show-input style="width:90%;margin-bottom: 20px"></Slider>
+        <p style="color: dodgerblue;margin: 10px 0px">请输入您想搜索的POI关键词信息</p>
+        <Input v-model="POIkeywords" placeholder="例如：餐饮、地铁、加油站......" clearable style="width:100%;margin-bottom: 20px"/>
+<!--        <p style="color: dodgerblue;margin: 10px 0px">请选择距离该公司范围</p>-->
+<!--        <Slider v-model="POIrange" max="200" min="100" :step="20" show-stops show-input style="width:100%;margin-bottom: 20px"></Slider>-->
       </div>
       <div slot="footer">
-        <Button type="primary" size="large" long  @click="">搜索</Button>
+        <Button type="primary" size="large" long  @click="findNearby(POIkeywords)">搜索</Button>
       </div>
     </Modal>
 
@@ -260,6 +265,127 @@
         title="公司文化建设">
       <p>{{currentCompany.legalPerson}}</p>
     </Modal>
+
+    <!--更换主题窗口-->
+    <Modal
+        v-model="changeThemeDialog"
+        title="更换主题"
+    >
+      <Tabs value="profile">
+        <TabPane label="地图主题" name="mapTheme">
+          <Row style="background:cornflowerblue;padding:20px">
+            <Col span="11">
+              <Card shadow>
+                <p slot="title">Borderless card</p>
+                <p>Content of card</p>
+                <p>Content of card</p>
+                <p>Content of card</p>
+              </Card>
+            </Col>
+            <Col span="11" offset="2">
+              <Card shadow>
+                <p slot="title">Use a card with a shadow effect</p>
+                <p>Content of card</p>
+                <p>Content of card</p>
+                <p>Content of card</p>
+              </Card>
+            </Col>
+          </Row>
+          <Row style="background:cornflowerblue;padding:20px">
+            <Col span="11">
+              <Card shadow>
+                <p slot="title">Borderless card</p>
+                <p>Content of card</p>
+                <p>Content of card</p>
+                <p>Content of card</p>
+              </Card>
+            </Col>
+            <Col span="11" offset="2">
+              <Card shadow>
+                <p slot="title">Use a card with a shadow effect</p>
+                <p>Content of card</p>
+                <p>Content of card</p>
+                <p>Content of card</p>
+              </Card>
+            </Col>
+          </Row>
+          <Row style="background:cornflowerblue;padding:20px">
+            <Col span="11">
+              <Card shadow>
+                <p slot="title">Borderless card</p>
+                <p>Content of card</p>
+                <p>Content of card</p>
+                <p>Content of card</p>
+              </Card>
+            </Col>
+            <Col span="11" offset="2">
+              <Card shadow>
+                <p slot="title">Use a card with a shadow effect</p>
+                <p>Content of card</p>
+                <p>Content of card</p>
+                <p>Content of card</p>
+              </Card>
+            </Col>
+          </Row>
+        </TabPane>
+        <TabPane label="图标主题" name="iconTheme">
+          <Row style="background:cornflowerblue;padding:20px">
+            <Col span="11">
+              <Card shadow>
+                <p slot="title">Borderless card</p>
+                <p>Content of card</p>
+                <p>Content of card</p>
+                <p>Content of card</p>
+              </Card>
+            </Col>
+            <Col span="11" offset="2">
+              <Card shadow>
+                <p slot="title">Use a card with a shadow effect</p>
+                <p>Content of card</p>
+                <p>Content of card</p>
+                <p>Content of card</p>
+              </Card>
+            </Col>
+          </Row>
+          <Row style="background:cornflowerblue;padding:20px">
+            <Col span="11">
+              <Card shadow>
+                <p slot="title">Borderless card</p>
+                <p>Content of card</p>
+                <p>Content of card</p>
+                <p>Content of card</p>
+              </Card>
+            </Col>
+            <Col span="11" offset="2">
+              <Card shadow>
+                <p slot="title">Use a card with a shadow effect</p>
+                <p>Content of card</p>
+                <p>Content of card</p>
+                <p>Content of card</p>
+              </Card>
+            </Col>
+          </Row>
+          <Row style="background:lightgray;padding:20px">
+            <Col span="11">
+              <Card shadow>
+                <p slot="title">Borderless card</p>
+                <p>Content of card</p>
+                <p>Content of card</p>
+                <p>Content of card</p>
+              </Card>
+            </Col>
+            <Col span="11" offset="2">
+              <Card shadow bordered>
+                <p slot="title">Use a card with a shadow effect</p>
+                <p>Content of card</p>
+                <p>Content of card</p>
+                <p>Content of card</p>
+              </Card>
+            </Col>
+          </Row>
+        </TabPane>
+      </Tabs>
+    </Modal>
   </div>
 
 </template>
@@ -285,6 +411,7 @@
                 markerList:[],                        //点标记
                 polylineList:[],                      //线标记
                 textList:[],                          //文本标记
+                confirmClearMap: false,
                 currentCompany:Object,                //当前点击了marker的公司
                 searchThisCompanyDialog:false,        //查找该公司对话框
                 addressDegreeDialog:false,            //查找附近地址公司对话框
@@ -298,30 +425,10 @@
                 companyReviewDialog: false,                 //公司评价
                 recruitmentInforDialog: false,              //公司招聘信息
                 cultureDialog: false,                       //公司文化建设
+                changeThemeDialog: false,                   //更换主题窗口
 
-                POItype:'',     //POI搜索类型
-                POItypeList:[
-                    {
-                        value: 'New York',
-                        label: 'New York'
-                    },
-                    {
-                        value: 'London',
-                        label: 'London'
-                    },
-                    {
-                        value: 'Sydney',
-                        label: 'Sydney'
-                    },
-                    {
-                        value: 'Ottawa',
-                        label: 'Ottawa'
-                    },
-                ],
-                POIrange:'',    //POI搜索范围
-                POIrangeList:[
-
-                ],
+                POIkeywords: '',     //POI搜索关键词
+                POIrange: 200,    //POI搜索范围距离
 
                 degreeList:[
                     {
@@ -412,6 +519,7 @@
                     var tool = new AMap.ToolBar();
                     global.map.addControl(tool);
                 });
+
                 //浏览器定位
                 global.map.plugin('AMap.Geolocation', function () {
                     var geolocation = new AMap.Geolocation({
@@ -432,11 +540,10 @@
                     AMap.event.addListener(geolocation, 'error', onError)
 
                     function onComplete(data) {
-
+                        console.log("定位成功");
                     }
 
                     function onError(data) {
-                        // 定位出错
                         console.log("定位出错");
                     }
 
@@ -448,14 +555,13 @@
             //接受search组件传来的值，对地图进行对该企业的定位
             pos: function (companySelected) {
                 this.$company = companySelected;
-                this.getAddressLocation(companySelected);
+                this.getAddressLocation(companySelected);//定位，增加标记
             },
             getAddressLocation: function (infor) {
                 var _this = this
-                var geocoder = new AMap.Geocoder();
+                var geocoder = new AMap.Geocoder(); //定位器，地理位置转化器
                 geocoder.getLocation(infor.address, function(status, result){
                     if (status === 'complete' && result.geocodes.length) {
-
                         var point = result.geocodes[0].location;
                         _this.$company.point = point;
                         var marker = new AMap.Marker({
@@ -469,7 +575,10 @@
                         global.map.setFitView(marker);
                         //给标记添加事件，让其显示信息窗格，显示公司信息
                         AMap.event.addListener(marker, 'click', function () {
-                            _this.inforShow(marker, infor);
+                            _this.inforShow(marker, infor)
+                            _this.$company = infor
+                            _this.$store.state.$company = infor
+                            console.log(_this.$company)
                         })
                         return point;
                     }
@@ -477,6 +586,7 @@
                         console.log("发生错误:" + JSON.stringify(result));
                     }
                 });
+
             },
             //定义marker的信息窗体
             inforShow: function (marker, company) {
@@ -505,6 +615,9 @@
                         //给标记添加事件，让其显示信息窗格，显示公司信息
                         AMap.event.addListener(marker, 'click', function () {
                             that.inforShow(marker, targetCompany);
+                            that.$company = targetCompany
+                            that.$store.state.$company = targetCompany
+                            console.log(that.$company)
                         })
                         //新建同主公司的连线
                         var path = [
@@ -570,12 +683,12 @@
             //侧边按钮组：
             //打开、关闭搜索结果栏
             openResult: function () {
-                if (this.$company.hasOwnProperty('name')) {
+                if (this.$company.hasOwnProperty('name') || this.$store.state.$isHaveSelectedToggle) {
                     this.$refs.showResult.resultWarpper = !this.$refs.showResult.resultWarpper;
                 } else {
                     this.$Message['info']({
                         background: true,
-                        content: '请先搜索企业！'
+                        content: '请先搜索并选中一个企业！！'
                     });
                 }
             },
@@ -611,7 +724,7 @@
                     this.spinShow = false
                     this.$Message['info']({
                         background: true,
-                        content: '请先搜索企业！'
+                        content: '请先搜索并选中一个企业！！'
                     });
                 }
 
@@ -624,7 +737,7 @@
                 }else{
                     this.$Message['info']({
                         background: true,
-                        content: '请先搜索企业！'
+                        content: '请先搜索并选中一个企业！！'
                     });
                 }
 
@@ -632,7 +745,7 @@
 
             //功能：查找附近其他公司，以getOtherCompanyAddress(),createLineText()函数为基础
             findAddressOther: function (degree) {
-                if (this.$company.hasOwnProperty('name') == true) {
+                if (this.$company.hasOwnProperty('name') == true || this.$store.state.$isHaveSelectedToggle) {
                     //检索相近地址
                     if(degree === ''){
                         this.$Message['info']({
@@ -693,7 +806,7 @@
                     this.spinShow = false
                     this.$Message['info']({
                         background: true,
-                        content: '请先搜索企业！'
+                        content: '请先搜索并选中一个企业！！'
                     });
                 }
             },
@@ -722,65 +835,128 @@
                         break;
                 }
             },
+            changeTheme(){
+              this.changeThemeDialog = !this.changeThemeDialog
+            },
+            //跳转到区域查询新页面
+            toRegionQuery(){
+                window.open('https://yuntu.amap.com/share/MrAVn2')
+            },
             searchThisCompany(item){
                 this.searchThisCompanyDialog = true;
             },
 
             //清除所有点标记和对应的连线
             removeMarkers(){
-              if(this.markerList.length !== 0){
-                  var i,j,k
-                  for(i = 0;i < this.markerList.length;i++){
-                      global.map.remove(this.markerList[i])
-                  }
-                  for(j = 0;j < this.polylineList.length;j++){
-                      global.map.remove(this.polylineList[j])
-                  }
-                  for(k = 0;k < this.textList.length;k++){
-                      global.map.remove(this.textList[k])
-                  }
-                  this.$company = {}
-                  this.markerList = []
-                  this.polylineList = []
-                  global.map.setZoom(12);
-              }else if(this.markerList.length === 0){
-                  this.$Message['info']({
-                      background: true,
-                      content: '当前地图未有点标记！'
-                  });
-              }
+                this.$Modal.confirm({
+                    title: '提示',
+                    content: '<p>确定要清除地图上的所有覆盖物吗？</p><p>这会导致您要重新搜索企业</p>',
+                    cancelText: '取消',
+                    onOk: () => {
+                        global.map.clearMap()
+                        this.$company = {}
+                        this.markerList = []
+                        this.polylineList = []
+                        global.map.setZoom(12);
+                    },
+                    onCancel: () => {
+                        this.$Message.info('已取消');
+                    }
+                });
+
+              // if(this.markerList.length !== 0){
+              //     var i,j,k
+              //     for(i = 0;i < this.markerList.length;i++){
+              //         global.map.remove(this.markerList[i])
+              //     }
+              //     for(j = 0;j < this.polylineList.length;j++){
+              //         global.map.remove(this.polylineList[j])
+              //     }
+              //     for(k = 0;k < this.textList.length;k++){
+              //         global.map.remove(this.textList[k])
+              //     }
+              //     this.$company = {}
+              //     this.markerList = []
+              //     this.polylineList = []
+              //     global.map.setZoom(12);
+              // }else if(this.markerList.length === 0){
+              //     this.$Message['info']({
+              //         background: true,
+              //         content: '当前地图未有点标记！'
+              //     });
+              // }
             },
 
-            findNearby(){
-                this.POIDialog = true
+            openPOIDialog(){
+              if(this.$company.hasOwnProperty('name')){
+                  this.POIDialog = true
+                  if(this.$company.hasOwnProperty('point')){
+                      console.log(this.$company.point)
+                  }else {
+                      alert("无地理属性")
+                      var _this = this
+                      var geocoder = new AMap.Geocoder()
+                      geocoder.getLocation(this.$company.address, function(status, result){
+                          if (status === 'complete' && result.geocodes.length) {
+                              var point = result.geocodes[0].location
+                              _this.$company.point = point
+                          }
+                          if (status === 'err') {
+                              console.log("发生错误:" + JSON.stringify(result))
+                          }
+                      });
+                  }
+              }else{
+                  this.$Message['info']({
+                      background: true,
+                      content: '请先搜索并选中一个企业！'
+                  });
+                  return
+              }
+            },
+            findNearby(keywords){
+                var _this = this
+                this.spinShow = true
+                if(this.$company.hasOwnProperty('name')){
+                    this.POIDialog = true
+                    AMap.service(["AMap.PlaceSearch"], function() {
+                        //构造地点查询类
+                        var placeSearch = new AMap.PlaceSearch({
+                            pageSize: 6, // 单页显示结果条数
+                            pageIndex: 1, // 页码
+                            city: _this.$company.city ? _this.$company.city : "", // 兴趣点城市
+                            citylimit: false,  //是否强制限制在设置的城市内搜索
+                            map: global.map, // 展现结果的地图实例
+                            panel: "panel", // 结果列表将在此容器中进行展示。
+                            autoFitView: true, // 是否自动调整地图视野使绘制的 Marker点都处于视口的可见范围
+                            extensions: 'all', //此项默认值：base，返回基本地址信息 取值：all，返回基本+详细信息
+                            showCover: true
+                        });
+                        //关键字查询
+                        // placeSearch.search(keywords);
+                        var cpoint = []
+                        if(_this.$company.point.lng && _this.$company.point.lat){
+                            cpoint.push(_this.$company.point.lng)
+                            cpoint.push(_this.$company.point.lat)
+                        }else{
+                            _this.spinShow = false
+                            _this.$Message.error(`系统错误！`);
+                            return
+                        }
+                        placeSearch.searchNearBy(keywords,cpoint,400,function(status,result) {
 
-                // var _this = this
-                // this.spinShow = true
-                // if(this.$company.hasOwnProperty('name')){
-                //     AMap.service(["AMap.PlaceSearch"], function() {
-                //         //构造地点查询类
-                //         var placeSearch = new AMap.PlaceSearch({
-                //             pageSize: 6, // 单页显示结果条数
-                //             pageIndex: 1, // 页码
-                //             city: _this.$company.city ? _this.$company.city : "", // 兴趣点城市
-                //             citylimit: false,  //是否强制限制在设置的城市内搜索
-                //             map: global.map, // 展现结果的地图实例
-                //             panel: "panel", // 结果列表将在此容器中进行展示。
-                //             autoFitView: true, // 是否自动调整地图视野使绘制的 Marker点都处于视口的可见范围
-                //             extensions: 'all', //此项默认值：base，返回基本地址信息 取值：all，返回基本+详细信息
-                //             showCover: true
-                //         });
-                //         //关键字查询
-                //         placeSearch.search(_this.$company.name);
-                //         _this.spinShow = false
-                //     });
-                // }else {
-                //     _this.spinShow = false
-                //     this.$Message['info']({
-                //         background: true,
-                //         content: '请先搜索企业！'
-                //     });
-                // }
+                        })
+                        _this.spinShow = false
+                        _this.POIDialog = false
+                    });
+
+                }else {
+                    this.spinShow = false
+                    this.$Message['info']({
+                        background: true,
+                        content: '请先搜索并选中一个企业！！'
+                    });
+                }
 
             }
         },
