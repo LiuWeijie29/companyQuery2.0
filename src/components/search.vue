@@ -16,6 +16,10 @@
       <CellGroup v-for="(item,index) in result" :key="item.id">
 			    <Cell :title="item.name" :selected="isSelected" @click.native="posMap(item,index)" />
 			</CellGroup>
+      <div style="margin-top: 15px">
+        <Page :total="searchResultTotal" size="small" show-total page-size="10" @on-change="pageChange"/>
+      </div>
+      <Spin size="large" fix v-if="drawerSpin"></Spin>
 		</Drawer>
 	</div>
 </template>
@@ -32,6 +36,8 @@
 				isSelected:false,
         page:1,
         showAll: false,
+        searchResultTotal: 0,    //搜索的结果总数
+        drawerSpin: false,
 			}
 		},
 		methods: {
@@ -46,23 +52,28 @@
 					});
 				} else {
 					//如果用户输入没问题 那么就发送数据请求
-					this.spinShow = true;//按钮变成正在搜索状态
+					this.spinShow = true       //按钮变成正在搜索状态
+          this.resultWarpper = true
+          this.drawerSpin = true
 					this.$http.get(this.url + this.userIpt + '&page=' + this.page).then(res => {
+            console.log("请求结果", res)
 						this.spinShow = false;
 						if(res.data.length > 1){
-                this.resultWarpper = true;
                 this.result = res.data.slice(1);
+                this.searchResultTotal = res.data[0]['数量']
                 //将请求到的所有数据注册到全局变量中
                 this.$store.state.$companyList = res.data.slice(1);
                 this.$companyList = res.data.slice(1);
-
+                this.drawerSpin = false
             }else{
                 this.$Modal.error({
                     title: '提示',
                     content: '暂未搜索到该企业信息，换个关键词看看'
                 });
+                this.drawerSpin = false
             }
 					}, res => {
+            this.drawerSpin = false
 						console.log(res);
 					})
 				}
@@ -84,6 +95,30 @@
               this.$emit('getAddressLocationAll',this.$store.state.$companyList[i])
           }
           this.$store.state.$isHaveSelectedToggle = true
+      },
+      pageChange:function (pageIndex) {
+          this.drawerSpin = true
+          this.$http.get(this.url + this.userIpt + '&page=' + pageIndex).then(res => {
+              console.log("请求结果", res)
+              this.spinShow = false;
+              if(res.data.length > 1){
+                  this.resultWarpper = true;
+                  this.result = res.data.slice(1);
+                  this.searchResultTotal = res.data[0]['数量']
+                  //将请求到的所有数据注册到全局变量中
+                  this.$store.state.$companyList = res.data.slice(1);
+                  this.$companyList = res.data.slice(1);
+                  this.drawerSpin = false
+              }else{
+                  this.$Modal.error({
+                      title: '提示',
+                      content: '系统开小差啦！请刷新后重试'
+                  });
+                  this.drawerSpin = false
+              }
+          }, res => {
+              console.log(res);
+          })
       }
 		},
 	}
