@@ -4,44 +4,35 @@
         <div id="chartContainer">
           <Card class="chartItem ">
           <div style="text-align:center">
-            <h3>A high quality UI Toolkit based on Vue.js 施工中</h3>
+            <h3>公司法人关联图</h3>
           </div>
-        </Card>
+		  </Card>
           <Card class="chartItem ">
             <div style="text-align:center">
-              <h3>A high quality UI Toolkit based on Vue.js 施工中</h3>
+              <h3>公司经营组织架构图</h3>
             </div>
           </Card>
           <Card class="chartItem ">
             <div style="text-align:center">
-              <h3>A high quality UI Toolkit based on Vue.js 施工中</h3>
+              <h3>公司人员组织结构图</h3>
             </div>
           </Card>
           <Card class="chartItem ">
             <div style="text-align:center">
-              <h3>A high quality UI Toolkit based on Vue.js 施工中</h3>
+              <h3>公司人员流动情况图</h3>
             </div>
           </Card>
           <Card class="chartItem ">
             <div style="text-align:center">
-              <h3>A high quality UI Toolkit based on Vue.js 施工中</h3>
+              <h3>公司市值评估</h3>
             </div>
           </Card>
           <Card class="chartItem ">
             <div style="text-align:center">
-              <h3>A high quality UI Toolkit based on Vue.js 施工中</h3>
+              <h3>公司评价</h3>
             </div>
           </Card>
-          <Card class="chartItem ">
-            <div style="text-align:center">
-              <h3>A high quality UI Toolkit based on Vue.js 施工中</h3>
-            </div>
-          </Card>
-          <Card class="chartItem ">
-            <div style="text-align:center">
-              <h3>A high quality UI Toolkit based on Vue.js 施工中</h3>
-            </div>
-          </Card>
+        
 <!--            <div class="chartItem chart-01"></div>-->
 <!--            <div class="chartItem chart-02"></div>-->
 <!--            <div class="chartItem chart-03"></div>-->
@@ -97,7 +88,7 @@
   .chartItem{
       margin: 15px;
       padding: 15px;
-      width: 20%;
+      width: 26%;
       height: 300px;
   }
 

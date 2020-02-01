@@ -125,46 +125,16 @@
           <p style="text-align: center">{{currentCompany.legalPerson}}</p>
           <Divider dashed />
           <p style="text-indent: 10px">
-            {{currentCompany.legalPerson}}，男，汉族，1958年2月生，四川成都人，1974年12月参加工作，1978年9月加入中国共产党，在职研究生学历，法学博士学位。
-            现任十九届中央委员，安徽省委书记，省十三届人大常委会主任、党组书记。1978年9月加入中国共产党，在职研究生学历，法学博士学位。
-            现任十九届中央委员，安徽省委书记，省十三届人大常委会主任、党组书记。1978年9月加入中国共产党，在职研究生学历，法学博士学位。
-            现任十九届中央委员，安徽省委书记，省十三届人大常委会主任、党组书记。1978年9月加入中国共产党，在职研究生学历，法学博士学位。
-
-            省十三届人大常委会主任、党组书记。1978年9月加入中国共产党，在职研究生学历，法学博士学位。
-            现任十九届中央委员，安徽省委书记，省十三届人大常委会主任、党组书记。1978年9月加入中国共产党，在职研究生学历，法学博士学位。
-            现任十九届中央委员，安徽省委书记，省十三届人大常委会主任、党组书记。
+            {{currentCompany.legalPerson}}，{{profileMock}}
           </p>
         </TabPane>
         <TabPane label="曾经任职" name="lastPositon">
           <Timeline style="margin: 15px">
-            <TimelineItem>
-              <p class="personTime">1976年</p>
-              <p class="personTimeContent">Apple I 问世</p>
-            </TimelineItem>
-            <TimelineItem>
-              <p class="personTime">1984年</p>
-              <p class="personTimeContent">发布 Macintosh</p>
-            </TimelineItem>
-            <TimelineItem>
-              <p class="personTime">2007年</p>
-              <p class="personTimeContent">发布 iPhone</p>
-            </TimelineItem>
-            <TimelineItem>
-              <p class="personTime">2010年</p>
-              <p class="personTimeContent">发布 iPad</p>
-            </TimelineItem>
-            <TimelineItem>
-              <p class="personTime">2011年10月5日</p>
-              <p class="personTimeContent">史蒂夫·乔布斯去世</p>
-            </TimelineItem>
-            <TimelineItem>
-              <p class="personTime">2007年</p>
-              <p class="personTimeContent">发布 iPhone</p>
+            <TimelineItem v-for="item in dateLineMock" :key="item.date">
+              <p class="personTime">{{item.date}}</p>
+              <p class="personTimeContent">{{item.pos}}</p>
             </TimelineItem>
           </Timeline>
-        </TabPane>
-        <TabPane label="拥有公司" name="ownedCompony">
-
         </TabPane>
         <TabPane label="合作伙伴" name="partner">暂无</TabPane>
       </Tabs>
@@ -416,6 +386,7 @@
                 searchThisCompanyDialog:false,        //查找该公司对话框
                 addressDegreeDialog:false,            //查找附近地址公司对话框
                 POIDialog: false,                     //POI搜索弹窗
+
                 legalPersonDialog: false,                   //企业法人信息
                 otherCompaniesDialog: false,                //当前法人下的其他公司
                 ERPStructureDialog: false,                  //公司经营组织架构
@@ -426,6 +397,10 @@
                 recruitmentInforDialog: false,              //公司招聘信息
                 cultureDialog: false,                       //公司文化建设
                 changeThemeDialog: false,                   //更换主题窗口
+
+				//mock假数据部分
+				profileMock:'',								//mock个人信息
+				dateLineMock:'',							//时间线模拟
 
                 POIkeywords: '',     //POI搜索关键词
                 POIrange: 200,    //POI搜索范围距离
@@ -459,6 +434,21 @@
         mounted() {
             this.init();
         },
+		watch:{
+			'legalPersonDialog':function(newVal){
+				if(this.legalPersonDialog){
+					//如果弹窗被打开，则发送模拟假数据请求
+					//请求假的个人简介
+					this.$http.get('/mockDataHandle').then(res =>{
+						this.profileMock = res.data.cparagraph
+						this.dateLineMock = res.data.dataLineMock
+					},err => {
+						console.log(err)
+					})
+				}
+			},
+
+		},
         methods: {
             showSubDialog(type){
                 switch (type) {
@@ -557,15 +547,35 @@
                 this.$company = companySelected;
                 this.getAddressLocation(companySelected);//定位，增加标记
             },
+            //获取公司注册资本，判断资金力度 给定不同的icon
+            getCapitalDegree: function (capital){
+                var capitalDegree
+                var iconType
+                if(capital.toString().includes("万")){
+                    capitalDegree = capital.toString().split("万")[0]
+                    if(capitalDegree > 0 && capitalDegree < 50){
+                        iconType = "static/building1.png"
+                    }else if(capitalDegree >= 50 && capitalDegree < 5000){
+                        iconType = "static/building2.png"
+                    }else if(capitalDegree >= 5000){
+                        iconType = "static/building3.png"
+                    }
+                }else {
+                    iconType = "static/building1.png"
+                }
+                return iconType
+            },
             getAddressLocation: function (infor) {
                 var _this = this
+                console.log("infor>>>",infor.capital.toString().split("万")[0])
                 var geocoder = new AMap.Geocoder(); //定位器，地理位置转化器
                 geocoder.getLocation(infor.address, function(status, result){
                     if (status === 'complete' && result.geocodes.length) {
                         var point = result.geocodes[0].location;
                         _this.$company.point = point;
+                        var iconType = _this.getCapitalDegree(infor.capital)
                         var marker = new AMap.Marker({
-                            // icon: '/src/assets/images/pos.png',
+                            icon: iconType,
                             title: '点击查看基本信息',
                             offset: new AMap.Pixel(-16, -32),
                         });
@@ -596,16 +606,17 @@
 
             //该函数用于将其他公司地址转化为高德地图经纬度坐标,并且连线
             //异步
-            getOtherCompanyAddress: function (address,targetCompany,type) {
+            getOtherCompanyAddress: function (company,targetCompany,type) {
                 var that = this;
                 var geocoder = new AMap.Geocoder();
-                geocoder.getLocation(address, function (status, result) {
+                geocoder.getLocation(company.address, function (status, result) {
                     if (status === 'complete' && result.geocodes.length) {
-                        console.log("result.geocodes：" + result.geocodes);
+                        var iconType = that.getCapitalDegree(company.capital)
+                        console.log(iconType)
                         var point = result.geocodes[0].location;
                         //新建标记
                         var marker = new AMap.Marker({
-                            // icon: '../img/pos.png',
+                            icon: iconType,
                             title: '点击查看基本信息',
                             offset: new AMap.Pixel(-18, -28),
                         });
@@ -704,7 +715,7 @@
                             //如果有其他企业，新建点 连线
                             for (var i = 1; i < res.data.length; i++) {
                                 //转化地址并添加标记
-                                this.getOtherCompanyAddress(res.data[i].address, res.data[i],'samePerson');
+                                this.getOtherCompanyAddress(res.data[i], res.data[i],'samePerson');
                             }
                             //地图缩放到全局
                             global.map.setZoom(12);
@@ -784,7 +795,7 @@
                             //如果有其他企业，新建点 连线
                             for (var i = 1; i < res.data.length; i++) {
                                 //转化地址并添加标记
-                                this.getOtherCompanyAddress(res.data[i].address, res.data[i],degree);
+                                this.getOtherCompanyAddress(res.data[i], res.data[i],degree);
                             }
                             //地图缩放到全局
                             global.map.setZoom(12);

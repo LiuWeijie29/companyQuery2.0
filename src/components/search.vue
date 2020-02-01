@@ -17,7 +17,7 @@
 			    <Cell :title="item.name" :selected="isSelected" @click.native="posMap(item,index)" />
 			</CellGroup>
       <div style="margin-top: 15px">
-        <Page :total="searchResultTotal" size="small" show-total page-size="10" @on-change="pageChange"/>
+        <Page :total="searchResultTotal" size="small" show-total  @on-change="pageChange"/>
       </div>
       <Spin size="large" fix v-if="drawerSpin"></Spin>
 		</Drawer>
