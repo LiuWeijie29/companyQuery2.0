@@ -144,6 +144,7 @@
     <Modal
         v-model="otherCompaniesDialog"
         title="当前法人下的其他公司">
+      111
         <relation-graph :currentCompany="currentCompany"></relation-graph>
     </Modal>
 
@@ -240,121 +241,58 @@
     <Modal
         v-model="changeThemeDialog"
         title="更换主题"
+        @on-ok="confirmChangeTheme"
     >
-      <Tabs value="profile">
-        <TabPane label="地图主题" name="mapTheme">
-          <Row style="background:cornflowerblue;padding:20px">
-            <Col span="11">
-              <Card shadow>
-                <p slot="title">Borderless card</p>
-                <p>Content of card</p>
-                <p>Content of card</p>
-                <p>Content of card</p>
-              </Card>
-            </Col>
-            <Col span="11" offset="2">
-              <Card shadow>
-                <p slot="title">Use a card with a shadow effect</p>
-                <p>Content of card</p>
-                <p>Content of card</p>
-                <p>Content of card</p>
-              </Card>
-            </Col>
-          </Row>
-          <Row style="background:cornflowerblue;padding:20px">
-            <Col span="11">
-              <Card shadow>
-                <p slot="title">Borderless card</p>
-                <p>Content of card</p>
-                <p>Content of card</p>
-                <p>Content of card</p>
-              </Card>
-            </Col>
-            <Col span="11" offset="2">
-              <Card shadow>
-                <p slot="title">Use a card with a shadow effect</p>
-                <p>Content of card</p>
-                <p>Content of card</p>
-                <p>Content of card</p>
-              </Card>
-            </Col>
-          </Row>
-          <Row style="background:cornflowerblue;padding:20px">
-            <Col span="11">
-              <Card shadow>
-                <p slot="title">Borderless card</p>
-                <p>Content of card</p>
-                <p>Content of card</p>
-                <p>Content of card</p>
-              </Card>
-            </Col>
-            <Col span="11" offset="2">
-              <Card shadow>
-                <p slot="title">Use a card with a shadow effect</p>
-                <p>Content of card</p>
-                <p>Content of card</p>
-                <p>Content of card</p>
-              </Card>
-            </Col>
-          </Row>
-        </TabPane>
-        <TabPane label="图标主题" name="iconTheme">
-          <Row style="background:cornflowerblue;padding:20px">
-            <Col span="11">
-              <Card shadow>
-                <p slot="title">Borderless card</p>
-                <p>Content of card</p>
-                <p>Content of card</p>
-                <p>Content of card</p>
-              </Card>
-            </Col>
-            <Col span="11" offset="2">
-              <Card shadow>
-                <p slot="title">Use a card with a shadow effect</p>
-                <p>Content of card</p>
-                <p>Content of card</p>
-                <p>Content of card</p>
-              </Card>
-            </Col>
-          </Row>
-          <Row style="background:cornflowerblue;padding:20px">
-            <Col span="11">
-              <Card shadow>
-                <p slot="title">Borderless card</p>
-                <p>Content of card</p>
-                <p>Content of card</p>
-                <p>Content of card</p>
-              </Card>
-            </Col>
-            <Col span="11" offset="2">
-              <Card shadow>
-                <p slot="title">Use a card with a shadow effect</p>
-                <p>Content of card</p>
-                <p>Content of card</p>
-                <p>Content of card</p>
-              </Card>
-            </Col>
-          </Row>
-          <Row style="background:lightgray;padding:20px">
-            <Col span="11">
-              <Card shadow>
-                <p slot="title">Borderless card</p>
-                <p>Content of card</p>
-                <p>Content of card</p>
-                <p>Content of card</p>
-              </Card>
-            </Col>
-            <Col span="11" offset="2">
-              <Card shadow bordered>
-                <p slot="title">Use a card with a shadow effect</p>
-                <p>Content of card</p>
-                <p>Content of card</p>
-                <p>Content of card</p>
-              </Card>
-            </Col>
-          </Row>
-        </TabPane>
-      </Tabs>
+        <div class="themeContainer">
+            <div class="theme">
+              <Tag color="blue" size="large">地图主题</Tag>
+              <collapse class="themeCol">
+                <radio-group v-model="themeHandle" vertical>
+                  <radio label="normal">
+                    标准
+                  </radio>
+                  <radio label="dark">
+                    幻影黑
+                  </radio>
+                  <radio label="light">
+                    月光银
+                  </radio>
+                  <radio label="whitesmoke">
+                    远山黛
+                  </radio>
+                  <radio label="fresh">
+                    草色青
+                  </radio>
+                  <radio label="darkblue">
+                    极夜蓝
+                  </radio>
+                </radio-group>
+              </collapse>
+            </div>
+            <div class="markerSetup">
+              <Tag color="blue">标记样式</Tag>
+              <collapse class="themeCol" size="large">
+                <radio-group v-model="markerHandle" vertical @on-change="userChangedMarker">
+                  <radio label="building1" class="radioCol">
+                    <img src="../../static/building11.png" alt="样式一">
+                    <img src="../../static/building12.png" alt="样式一">
+                    <img src="../../static/building13.png" alt="样式一">
+                  </radio>
+                  <radio label="building2" class="radioCol">
+                    <img src="../../static/building21.png" alt="样式二">
+                    <img src="../../static/building22.png" alt="样式一">
+                    <img src="../../static/building23.png" alt="样式一">
+                  </radio>
+                  <radio label="building3" class="radioCol">
+                    <img src="../../static/building31.png" alt="样式三">
+                    <img src="../../static/building32.png" alt="样式一">
+                    <img src="../../static/building33.png" alt="样式一">
+                  </radio>
+                </radio-group>
+              </collapse>
+            </div>
+            <Tag color="default">三种标记分别代表注册资本在50万以下、50万-5000万、5000万以上的公司</Tag>
+        </div>
     </Modal>
   </div>
 
@@ -398,9 +336,9 @@
                 cultureDialog: false,                       //公司文化建设
                 changeThemeDialog: false,                   //更换主题窗口
 
-				//mock假数据部分
-				profileMock:'',								//mock个人信息
-				dateLineMock:'',							//时间线模拟
+				        //mock假数据部分
+				        profileMock:'',								//mock个人信息
+				        dateLineMock:'',							//时间线模拟
 
                 POIkeywords: '',     //POI搜索关键词
                 POIrange: 200,    //POI搜索范围距离
@@ -428,6 +366,9 @@
                 ],
                 degree:'',
 
+                themeHandle:'normal',      //地图主题控制器
+                markerHandle:'building1',    //marker主题样式控制器
+                isUserChangedMarker: false, //用户是否更换marker样式
             }
         },
 
@@ -554,15 +495,16 @@
                 if(capital.toString().includes("万")){
                     capitalDegree = capital.toString().split("万")[0]
                     if(capitalDegree > 0 && capitalDegree < 50){
-                        iconType = "static/building1.png"
+                        iconType = "static/" + this.markerHandle + "1.png"
                     }else if(capitalDegree >= 50 && capitalDegree < 5000){
-                        iconType = "static/building2.png"
+                        iconType = "static/" + this.markerHandle + "2.png"
                     }else if(capitalDegree >= 5000){
-                        iconType = "static/building3.png"
+                        iconType = "static/" + this.markerHandle + "3.png"
                     }
                 }else {
-                    iconType = "static/building1.png"
+                    iconType = "static/" + this.markerHandle + "1.png"
                 }
+                console.log(iconType)
                 return iconType
             },
             getAddressLocation: function (infor) {
@@ -822,30 +764,6 @@
                 }
             },
 
-            //更改主题样式
-            changeColor: function () {
-                this.colorFlag++;
-                if (this.colorFlag == 6) {
-                    this.colorFlag = 1;
-                }
-                switch (this.colorFlag) {
-                    case 1:
-                        global.map.setMapStyle('amap://styles/normal');
-                        break;
-                    case 2:
-                        global.map.setMapStyle('amap://styles/grey');
-                        break;
-                    case 3:
-                        global.map.setMapStyle('amap://styles/dark');
-                        break;
-                    case 4:
-                        global.map.setMapStyle('amap://styles/light');
-                        break;
-                    case 5:
-                        global.map.setMapStyle('amap://styles/darkblue');
-                        break;
-                }
-            },
             changeTheme(){
               this.changeThemeDialog = !this.changeThemeDialog
             },
@@ -969,7 +887,26 @@
                     });
                 }
 
-            }
+            },
+
+            //用户是否更改marker样式
+            userChangedMarker(){
+              this.isUserChangedMarker = true
+            },
+            //更换主题
+            confirmChangeTheme(){
+                if(this.themeHandle){
+                    global.map.setMapStyle('amap://styles/' + this.themeHandle)
+                }else{
+                    alert("系统出错了！")
+                }
+                //如果用户修改了marker样式，则要清除点标记重新搜索
+                if(this.isUserChangedMarker){
+                  global.map.clearMap()
+                  this.isUserChangedMarker = false
+                }
+
+            },
         },
         components: {
             search,
@@ -1077,5 +1014,16 @@
     top: 25px;
     right: 135px;
     width: 280px;
+  }
+  .themeCol {
+    margin: 10px 0px;
+    padding: 10px 10px;
+  }
+  .radioCol {
+    margin: 15px 0px;
+  }
+  .radioCol img {
+    margin-bottom: -10px;
+    margin-right: 15px;
   }
 </style>
