@@ -6,12 +6,15 @@
         <div class="content">
           <Drawer title="查询助手" placement="left" :closable="false" v-model="companyAssHandle">
                 <ul class="nav-tab">
-                    <li class="nav-item" @click="cur=0" :class="{selected:cur == 0}">企业地图</li>
-                    <li class="nav-item" @click="cur=1" :class="{selected:cur == 1}">企业图谱</li>
-                    <li class="nav-item" @click="cur=2" :class="{selected:cur == 2}">基本信息</li>
-                    <li class="nav-item" @click="cur=3" :class="{selected:cur == 3}">发展时间轴</li>
-                    <li class="nav-item" @click="cur=4" :class="{selected:cur == 4}">招聘信息</li>
-                    <li class="nav-item" @click="cur=5" :class="{selected:cur == 5}">新闻资讯</li>
+                    <li class="nav-item" @click="cur=0" :class="{selected:cur == 0}"><Icon type="ios-map-outline" class="menuIcon" size="22" />企业地图</li>
+                    <li class="nav-item" @click="cur=1" :class="{selected:cur == 1}"><Icon type="ios-analytics-outline" class="menuIcon" size="20"/>企业图谱</li>
+                    <li class="nav-item" @click="cur=2" :class="{selected:cur == 2}"><Icon type="ios-paper-outline" class="menuIcon" size="20"/>基本信息</li>
+                    <li class="nav-item" @click="cur=3" :class="{selected:cur == 3}"><Icon type="ios-git-commit" class="menuIcon" size="22"/>发展时间轴</li>
+                    <li class="nav-item" style="color: darkgray" :class="{selected:cur == 4}">
+                      <Icon type="ios-person-outline" class="menuIcon" size="22" />
+                      招聘信息
+                    </li>
+                    <li class="nav-item" @click="cur=5" :class="{selected:cur == 5}"><Icon type="ios-list" class="menuIcon" size="22"/>新闻资讯</li>
 <!--                    <li class="nav-item" @click="cur=6" :class="{selected:cur == 6}">自由区域查询</li>-->
 <!--                    <li class="nav-item" @click="cur=7" :class="{selected:cur == 7}">数据来源</li>-->
 <!--                    <li class="nav-item" @click="cur=8" :class="{selected:cur == 8}">更多功能</li>-->
@@ -135,6 +138,18 @@
         height: 40px;
         text-align: left;
         list-style: none;
+    }
+    .menuIcon{
+      line-height: 10px;
+      margin-right: 8px;
+      margin-left: -10px;
+    }
+    .demo-badge{
+      width: 42px;
+      height: 42px;
+      background: #eee;
+      border-radius: 6px;
+      display: inline-block;
     }
     .nav-item:hover{
         background-color: aliceblue;

@@ -52,6 +52,8 @@
 
 <style scoped>
 	.timeContainer {
+    margin-top: 10px;
+    margin-left: 60px;
 		width: 100%;
 		height: 100%;
 		padding: 20px;

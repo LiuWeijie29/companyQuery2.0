@@ -7,14 +7,14 @@
              <img id="logo" src="/static/LOGO.png" height="50px" width="auto" @click="goIndex()"/>
            </Col>
            <Col span="5">
-             <MenuItem name="1">
+             <MenuItem name="1" @click.native="goIndex()">
                <Icon type="md-home" />
                首页
              </MenuItem>
-             <MenuItem name="2" @click.native="changeNavIndex">
-               <Icon type="md-analytics" />
-               大屏数据可视化
-             </MenuItem>
+<!--             <MenuItem name="2" @click.native="changeNavIndex">-->
+<!--               <Icon type="md-analytics" />-->
+<!--               大屏数据可视化-->
+<!--             </MenuItem>-->
            </Col>
         </Row>
 
@@ -36,9 +36,6 @@
 			goIndex:()=>{
 				location.href="/home"
 			},
-      changeNavIndex:()=>{
-
-      },
 		}
 	}
 </script>

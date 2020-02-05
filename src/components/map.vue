@@ -5,7 +5,7 @@
       <search @getInfor="pos" @getAddressLocationAll="getAddressLocation" ref="showResult"></search>
       <div id="container">
         <Spin size="large" fix v-if="spinShow"></Spin>
-        <div id="panel"></div>
+        <div id="panel" :class="{ hide:hideHandle }"></div>
       </div>
     </Col>
     <Col span="1">
@@ -34,13 +34,6 @@
           </li>
           <li>
             <div class="optionBar-item">
-              <Tooltip content="清除所有标记" placement="left">
-                <Icon type="ios-close-circle" size="32" @click="removeMarkers"/>
-              </Tooltip>
-            </div>
-          </li>
-          <li>
-            <div class="optionBar-item">
               <Tooltip content="周边POI搜索" placement="left">
                 <Icon type="md-search" size="32" @click="openPOIDialog"/>
               </Tooltip>
@@ -57,6 +50,20 @@
             <div class="optionBar-item">
               <Tooltip content="自由区域查询" placement="left">
                 <Icon type="md-flag" size="32" @click="toRegionQuery"/>
+              </Tooltip>
+            </div>
+          </li>
+          <li>
+            <div class="optionBar-item">
+              <Tooltip content="打开/关闭信息窗口" placement="left">
+                <Icon type="md-albums" size="32" @click="openCloseInfo"/>
+              </Tooltip>
+            </div>
+          </li>
+          <li>
+            <div class="optionBar-item">
+              <Tooltip content="清除所有标记" placement="left">
+                <Icon type="ios-close-circle" size="32" @click="removeMarkers"/>
               </Tooltip>
             </div>
           </li>
@@ -369,6 +376,8 @@
                 themeHandle:'normal',      //地图主题控制器
                 markerHandle:'building1',    //marker主题样式控制器
                 isUserChangedMarker: false, //用户是否更换marker样式
+
+                hideHandle:true,
             }
         },
 
@@ -786,7 +795,8 @@
                         this.$company = {}
                         this.markerList = []
                         this.polylineList = []
-                        global.map.setZoom(12);
+                        global.map.setZoom(12)
+                        this.hideHandle = true
                     },
                     onCancel: () => {
                         this.$Message.info('已取消');
@@ -816,13 +826,16 @@
               // }
             },
 
+            //关闭信息窗格
+            openCloseInfo(){
+              this.hideHandle = !this.hideHandle
+            },
             openPOIDialog(){
               if(this.$company.hasOwnProperty('name')){
                   this.POIDialog = true
                   if(this.$company.hasOwnProperty('point')){
                       console.log(this.$company.point)
                   }else {
-                      alert("无地理属性")
                       var _this = this
                       var geocoder = new AMap.Geocoder()
                       geocoder.getLocation(this.$company.address, function(status, result){
@@ -848,6 +861,7 @@
                 this.spinShow = true
                 if(this.$company.hasOwnProperty('name')){
                     this.POIDialog = true
+                    this.hideHandle = false
                     AMap.service(["AMap.PlaceSearch"], function() {
                         //构造地点查询类
                         var placeSearch = new AMap.PlaceSearch({
@@ -1014,6 +1028,9 @@
     top: 25px;
     right: 135px;
     width: 280px;
+  }
+  .hide {
+    display: none;
   }
   .themeCol {
     margin: 10px 0px;
